@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "app.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "frontend/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    { "src": "/sign", "dest": "/app.js" },
+    { "src": "/sign-requests/(.*)", "dest": "/app.js" },
+    { "src": "/jwks", "dest": "/app.js" },
+    { "src": "/webhook", "dest": "/app.js" },
+    { "src": "/(.*)", "dest": "/frontend/$1" }
+  ]
+}
