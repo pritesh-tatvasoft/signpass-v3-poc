@@ -1,8 +1,8 @@
 {
   "PORT": 4000,
-  "SIGN_BASE_URL": "http://localhost:5156/sign-v3",
-  "SIGN_JWKS_URL": "http://localhost:5156/sign-v3/jwks",
-  "CLIENT_ID": "mockpass-sign-v3-client",
+  "SIGN_BASE_URL": "https://staging.sign.singpass.gov.sg/api/v3",
+  "SIGN_JWKS_URL": "https://static.staging.sign.singpass.gov.sg/.well-known/keys.json",
+  "CLIENT_ID": "dd8aOXYJtaF0sZuPP2KvgXnUPJSg3ZlS",
   "CLIENT_PRIVATE_KEY": {
     "kty": "EC",
     "d": "niMDmyyWQ6BnDQRnD4Nyixy4e0XCOVml5ZdIoMGyKbs",
