@@ -7,6 +7,9 @@
     "start": "node app.js"
   },
   "license": "MIT",
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
     "axios": "^1.12.1",
     "express": "^5.1.0",
