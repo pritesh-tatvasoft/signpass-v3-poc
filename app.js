@@ -2,9 +2,15 @@ const express = require("express");
 const config = require("./config.json");
 const { readFileSync } = require("node:fs");
 const path = require("node:path");
-const { SignJWT, importJWK, createRemoteJWKSet, jwtVerify } = require("jose");
 const NodeCache = require("node-cache");
 const assert = require("node:assert");
+
+// jose v6 is ESM-only, so we use dynamic import() for Vercel compatibility
+let _jose;
+const getJose = async () => {
+  if (!_jose) _jose = await import("jose");
+  return _jose;
+};
 
 const axios = require("axios").create({ baseURL: config.SIGN_BASE_URL });
 const cache = new NodeCache({ stdTTL: 5400 });
@@ -13,6 +19,7 @@ const app = express();
 app.use(express.json());
 
 const createJwt = async (payload) => {
+  const { SignJWT, importJWK } = await getJose();
   return new SignJWT(payload)
     .setIssuedAt()
     .setProtectedHeader({
@@ -111,6 +118,7 @@ app.post("/webhook", async (req, res) => {
   const token = req.body.token;
   assert(token);
 
+  const { jwtVerify, createRemoteJWKSet } = await getJose();
   const { payload } = await jwtVerify(
     token,
     createRemoteJWKSet(new URL(config.SIGN_JWKS_URL)),
