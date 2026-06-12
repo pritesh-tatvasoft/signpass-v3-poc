@@ -35,19 +35,23 @@ app.get("/sign", async (req, res) => {
     client_id: config.CLIENT_ID,
   };
 
-  const createSignRequestResponse = await axios
-    .post("/sign-requests", readFileSync(path.join(__dirname, "dummy.pdf")), {
+  let createSignRequestResponse;
+  try {
+    createSignRequestResponse = await axios.post("/sign-requests", readFileSync(path.join(__dirname, "dummy.pdf")), {
       headers: {
         "Content-Type": "application/octet-stream",
         Authorization: await createJwt(payload),
       },
-    })
-    .catch((error) => {
-      console.log(error.response.data);
     });
+  } catch (error) {
+    console.error("Singpass API Error:", error.response?.data || error.message);
+    return res.status(500).json({
+      message: "Failed to create sign request. Singpass rejected the request.",
+      error: error.response?.data || error.message
+    });
+  }
 
-  const { signing_url, request_id, exchange_code } =
-    createSignRequestResponse.data;
+  const { signing_url, request_id, exchange_code } = createSignRequestResponse.data;
 
   cache.set(`exchange_code::${request_id}`, exchange_code);
 
